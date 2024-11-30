@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
+import { verify } from "hono/jwt";
 import { Bindings } from "hono/types";
 
 export const blogRouter = new Hono<{
@@ -8,10 +9,22 @@ export const blogRouter = new Hono<{
     DATABASE_URL: string;
     JWT_SECRET: string;
   };
+  Variables: {
+    userId: string;
+  };
 }>();
 blogRouter.use("/*", async (c, next) => {
-  const token = c.req.header("Authorization");
-  next();
+  try {
+    const authHeader = c.req.header("authorization") || "";
+    const user = await verify(authHeader, c.env.JWT_SECRET);
+    c.set("userId", user.id);
+    await next();
+  } catch (e) {
+    c.status(403);
+    return c.json({
+      message: "You are not logged in",
+    });
+  }
 });
 
 blogRouter.post("/", async (c) => {
@@ -60,15 +73,16 @@ blogRouter.get("/", async (c) => {
       },
     });
     return c.json({
-      id: blog.id,
+      blog,
     });
   } catch (e) {
     c.status(411);
     return c.json({
-      message: "Error while fetching the blog",
+      message: "Error while fetching the blog post",
     });
   }
 });
+// peginations
 blogRouter.get("/bulk", async (c) => {
   const body = await c.req.json();
   const prisma = new PrismaClient({

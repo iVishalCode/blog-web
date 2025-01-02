@@ -1,13 +1,9 @@
-name = "backend"
-main = "src/index.ts"
-compatibility_date = "2024-11-06"
+name = "backend-medium"
+compatibility_date = "2025-01-02"
 
-# compatibility_flags = [ "nodejs_compat" ]
-
- [vars]
-DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMmY0ZTFkYmUtZGRhNy00ZGMzLTk0OGYtZjM3NWRkYTM4MGJkIiwidGVuYW50X2lkIjoiODkyNTcyZGI0OGQ3YzdlMDRlOWJhMzU2MGM1MDQyZDhhNzE2NjBiNGVjNWY1NmQ1MWMxNjc4ZGYyN2U5NTliMiIsImludGVybmFsX3NlY3JldCI6ImEzNTBkNGFiLTFjZWMtNDFjMC1iNDFjLWNiNTdmYjQ2ODQ4ZSJ9.CKAP2rHg7FI4WV1XmvgPcLfcROqSxsE0kVuuBA2TT4A"
-JWT_SECRET="vishal1secret"
-
+[vars]
+DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiYzNhNTQwNDAtMmRjMC00YmUzLTk4NmQtOTk4NDkxMTkxNmRkIiwidGVuYW50X2lkIjoiNDc4NTc4MWQ3ZTM2MzMyOTVkNzE1ZWFlNzBmNDJmMzk5NDQ5MmU3MzNiNjZmMDEzMjVhMTc1MjgxNjZmZTMzNCIsImludGVybmFsX3NlY3JldCI6Ijg0NGI1MzViLTczNDQtNGViNC04ZDNiLWQ0NzBiMjEyZmVjZiJ9.3aaZxo3sio3f2m0SlMljPOxZb_psCY4R6c6LEy1pOSU"
+JWT_SECRET = "Vishal1secret"
 # [[kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
 # id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -20,10 +16,3 @@ JWT_SECRET="vishal1secret"
 # binding = "DB"
 # database_name = "my-database"
 # database_id = ""
-
-# [ai]
-# binding = "AI"
-
-# [observability]
-# enabled = true
-# head_sampling_rate = 1

@@ -2,13 +2,15 @@ import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { sign } from "hono/jwt";
-import { signupInput } from "@1vishalsd/medium-blog";
+import { signupInput, signinInput } from "@100xdevs/medium-common";
+
 export const userRouter = new Hono<{
   Bindings: {
     DATABASE_URL: string;
     JWT_SECRET: string;
   };
 }>();
+
 userRouter.post("/signup", async (c) => {
   const body = await c.req.json();
   const { success } = signupInput.safeParse(body);
@@ -21,6 +23,7 @@ userRouter.post("/signup", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
+
   try {
     const user = await prisma.user.create({
       data: {
@@ -35,21 +38,29 @@ userRouter.post("/signup", async (c) => {
       },
       c.env.JWT_SECRET
     );
+
     return c.text(jwt);
   } catch (e) {
     console.log(e);
-
     c.status(411);
     return c.text("Invalid");
   }
-
-  return c.text("Hello Hono!");
 });
+
 userRouter.post("/signin", async (c) => {
   const body = await c.req.json();
+  const { success } = signinInput.safeParse(body);
+  if (!success) {
+    c.status(411);
+    return c.json({
+      message: "Inputs not correct",
+    });
+  }
+
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
+
   try {
     const user = await prisma.user.findFirst({
       where: {
@@ -57,7 +68,6 @@ userRouter.post("/signin", async (c) => {
         password: body.password,
       },
     });
-
     if (!user) {
       c.status(403);
       return c.json({
@@ -70,12 +80,11 @@ userRouter.post("/signin", async (c) => {
       },
       c.env.JWT_SECRET
     );
+
     return c.text(jwt);
   } catch (e) {
     console.log(e);
-
     c.status(411);
     return c.text("Invalid");
   }
-  return c.text("Hello Hono!");
 });
